@@ -8,7 +8,25 @@ class Usuarios extends controller
     }
     public function index()
     {
-        $this->views->getView($this, "index");
+        $data['cajas'] = $this->model->getCajas();
+        $this->views->getView($this, "index", $data);
+    }
+    public function listar()
+    {
+        $data = $this->model->getUsuarios();
+        for ($i=0; $i < count($data); $i++) { 
+            if ($data[$i]['estado'] == 1) {
+                $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
+            }else {
+                $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
+            }
+            $data[$i]['acciones'] = '<div>
+            <button class="btn btn-primary" type="button">Editar</button>
+            <button class="btn btn-danger" type="button">Eliminar</button>
+            <div/>';
+        }
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
     }
     public function validar()
     {
@@ -32,5 +50,7 @@ class Usuarios extends controller
     }
 }
 
-
 ?>
+
+
+
