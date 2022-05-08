@@ -29,15 +29,45 @@ class UsuariosModel extends Query{
         $this->nombre = $nombre;
         $this->clave = $clave;
         $this->id_caja = $id_caja;
-        $sql = "INSERT INTO usuarios(usuario, nombre, clave, id_caja) VALUES (?,?,?,?)";
-        $datos = array($this->usuario, $this->nombre, $this->clave, $this->id_caja);
+        $verificar = "SELECT * FROM usuarios WHERE usuario = '$this->usuario'";
+        $existe = $this->select($verificar);
+        if (empty($existe)) {
+            $sql = "INSERT INTO usuarios(usuario, nombre, clave, id_caja) VALUES (?,?,?,?)";
+            $datos = array($this->usuario, $this->nombre, $this->clave, $this->id_caja);
+            $data = $this->save($sql, $datos);
+            if ($data == 1) {
+                $res = "ok";
+            }else {
+                $res = "error";
+            }
+        }else {
+            $res = "existe";
+        }
+        return $res;
+    }
+
+    public function modificarUsuario(string $usuario, string $nombre, int $id_caja, int $id)
+    {
+        $this->usuario = $usuario;
+        $this->nombre = $nombre;
+        $this->id = $id;
+        $this->id_caja = $id_caja;
+        $sql = "UPDATE usuarios SET usuario = ?, nombre = ?, id_caja = ? WHERE id = ?";
+        $datos = array($this->usuario, $this->nombre, $this->id_caja, $this->id);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
-            $res = "ok";
+            $res = "modificado";
         }else {
             $res = "error";
         }
         return $res;
+    }
+
+    public function editarUser(int $id)
+    {
+        $sql = "SELECT * FROM usuarios WHERE id = $id";
+        $data = $this->select($sql);
+        return $data;
     }
 }
 ?>
