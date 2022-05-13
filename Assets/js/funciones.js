@@ -134,3 +134,81 @@ function btnEditarUser(id) {
     }
     
 }
+
+function btnEliminarUser(id) {
+    Swal.fire({
+        title: 'Estas seguro de eliminar el usuario?',
+        text: "El usuario no se eliminara de forma permanente, solo cambiara el estado a inactivo!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Usuarios/eliminar/" + id;
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200) {
+                    const $res =  JSON.parse(this.responseText);
+                    if ($res == "ok") {
+                        Swal.fire(
+                            'Mensaje!',
+                            'Usuario eliminado con exito.',
+                            'success'
+                          )
+                        tblUsuarios.ajax.reload();
+                    } else {
+                        Swal.fire(
+                            'Mensaje!',
+                            res,
+                            'error'
+                          )
+                    }
+                }
+            }
+        }
+      })
+}
+
+
+function btnActivarUser(id) {
+    Swal.fire({
+        title: 'Estas seguro de activar el usuario?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Usuarios/activar/" + id;
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200) {
+                    const $res =  JSON.parse(this.responseText);
+                    if ($res == "ok") {
+                        Swal.fire(
+                            'Mensaje!',
+                            'Usuario activado con exito.',
+                            'success'
+                          )
+                        tblUsuarios.ajax.reload();
+                    } else {
+                        Swal.fire(
+                            'Mensaje!',
+                            res,
+                            'error'
+                          )
+                    }
+                }
+            }
+        }
+      })
+}
